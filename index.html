@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+    <script src="aframe-text-geometry-component.min.js"></script>
+    <script src="https://raw.githack.com/stemkoski/AR.js-examples/master/js/aframe-particle-system-component.js"></script>
+    <script>
+      AFRAME.registerComponent("videohandler", {
+        init: function() {
+          var marker = this.el;
+          this.vid = document.querySelector("#vid");
+
+          marker.addEventListener(
+            "markerFound",
+            function() {
+              this.toggle = true;
+              this.vid.play();
+            }.bind(this)
+          );
+
+          marker.addEventListener(
+            "markerLost",
+            function() {
+              this.toggle = false;
+              this.vid.pause();
+            }.bind(this)
+          );
+        }
+      });
+    </script>
+  </head>
+
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene
+      vr-mode-ui="enabled: false;"
+      loading-screen="enabled: false;"
+      renderer="logarithmicDepthBuffer: true;"
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      id="scene"
+      embedded
+      gesture-detector
+    >
+      <a-assets>
+        <a-asset-item
+          id="animated-asset"
+          src="https://cdn.glitch.com/f227f9c1-8683-4b9a-be37-3aaefd62c566%2Fassxxet.gltf?v=1614641482940"
+        ></a-asset-item>
+        <a-asset-item
+          id="exoFont"
+          src="https://cdn.glitch.com/619b5f7c-546e-49bf-bbf0-9128e60a2915%2FexoBlack.typeface.json?v=1614647034234"
+        ></a-asset-item>
+        <video
+          id="vid"
+          src="https://cdn.glitch.com/b38eb9a2-8d3c-4e64-998d-6d0738b4c845%2Fy2mate.com%20-%20Feliz%20lunes%20y%20feliz%20mes%20de%20marzo%20La%20primer%20rosa%20de%20marzo%20para%20tiImagenes%20de%20feliz%20inicio%20de%20marzo_360p.mp4?v=1614904522449"
+          preload="auto"
+          response-type="arraybuffer"
+          loop
+          crossorigin
+          webkit-playsinline
+          playsinline
+        ></video>
+      </a-assets>
+
+      <a-marker
+        id="animated-marker"
+        type="pattern"
+        preset="custom"
+        url="https://cdn.glitch.com/cbc24da2-5db2-4f18-af33-b7c31480f5c3%2Fpattern-pattern-WhatsApp%20Image%202021-02-19%20at%208.59.41%20PM%20(1).patt?v=1614639177064"
+        videohandler
+        smooth="true"
+        smoothCount="10"
+        smoothTolerance="0.01"
+        smoothThreshold="5"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+      >
+        <a-entity
+          id="bowser-model"
+          scale="0.002 0.002 0.002"
+          rotation="-45 0 0"
+          position=".8 .2 .2"
+          animation-mixer="loop: repeat"
+          gltf-model="#animated-asset"
+          class="clickable"
+          gesture-handler
+        ></a-entity>
+        <a-entity
+          text-geometry="value: Feliz; font: #exoFont;"
+          material="color: red; repeat: 0.5 0.5;"
+          rotation="0 0 0"
+          scale="0.5 0.5 0.5"
+          position=".3 .5 .0"
+        >
+        </a-entity>
+
+        <a-entity
+          text-geometry="value: Dia; font: #exoFont;"
+          material="color: red; repeat: 0.5 0.5;"
+          rotation="0 0 0"
+          position=".5 .2 .0"
+          scale="0.5 0.5 0.5"
+        >
+        </a-entity>
+        <a-video
+          src="#vid"
+          scale="1 1 1"
+          position="0 0 -.5"
+          rotation="-15 0 0"
+          class="clickable"
+        ></a-video>
+        <a-entity
+          position=".8 0 0"
+          particle-system="
+                texture: https://cdn.glitch.com/b38eb9a2-8d3c-4e64-998d-6d0738b4c845%2Fstar.png?v=1614707195985;
+                color: #1CACF0, #FFFF00; 
+                size: 1, 0;
+                velocityValue: 0.001 0.001 0.001;
+                velocitySpread: 0.5 0 0.5; 
+                accelerationValue: 0.001 0.001 0.001;
+                accelerationSpread: 0.001 0.001 0.001;
+                rotationAngle: 0; 
+                blending: 1;
+                particleCount: 200;
+                maxAge: 5; "
+        >
+        </a-entity>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+  </body>
+</html>
